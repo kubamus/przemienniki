@@ -1,0 +1,19 @@
+Aby uruchomić program, wykonaj następujące kroki:
+1. Otwórz terminal, i przejdź do katalogu, w którym znajduje się program.
+2. Zainstaluj Node.js i npm ze strony https://nodejs.org/. (program testowany na wersji 22.15.1)
+3. Zainstaluj zależności, uruchamiając polecenie w terminalu:
+npm install --force
+4. Utwórz plik ".env" w katalogu głównym programu i wprowadź URL do bazy danych MySQL. Przykładowa treść pliku:
+
+DATABASE_URL="mysql://root:@localhost:3306/przemienniki"
+
+5. Wygeneruj klienta Prisma, uruchamiając polecenie w terminalu:
+npx prisma generate
+
+6. Zbuduj stronę, używając polecenia:
+npm run build
+
+7. Uruchom serwer, wpisując w terminalu:
+npm run start
+
+8. Otwórz przeglądarkę i przejdź do adresu http://localhost:3000, aby zobaczyć działającą aplikację.

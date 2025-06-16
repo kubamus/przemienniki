@@ -1,0 +1,143 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+model repeaters {
+  id                Int                 @id @default(autoincrement()) @db.UnsignedInt
+  qra               String              @db.VarChar(16)
+  status            Int                 @default(0) @db.UnsignedInt
+  licensevalid      DateTime?           @db.Date
+  qrg_tx            Decimal             @default(0.000000) @db.Decimal(12, 6)
+  qrg_rx            Decimal             @default(0.000000) @db.Decimal(12, 6)
+  crossbandmode     Int                 @default(0) @db.UnsignedInt
+  qrg_cross         Decimal?            @db.Decimal(12, 6)
+  band              Int                 @default(0) @db.UnsignedInt
+  mode              Int                 @default(0) @db.UnsignedInt
+  locator           String?             @db.VarChar(6)
+  qth               String?             @db.VarChar(255)
+  country           String              @default("") @db.VarChar(2)
+  latitude          Decimal?            @db.Decimal(10, 6)
+  longitude         Decimal?            @db.Decimal(10, 6)
+  altoversea        Int?                @db.UnsignedInt
+  altoverground     Int?                @db.UnsignedInt
+  activation        Int                 @default(0) @db.UnsignedInt
+  ctcss_rx          Decimal?            @db.Decimal(4, 1)
+  ctcss_tx          Decimal?            @db.Decimal(4, 1)
+  dcs_rx            String?             @db.VarChar(6)
+  dcs_tx            String?             @db.VarChar(6)
+  dtmf_rx           String?             @db.VarChar(1)
+  power             Decimal?            @db.Decimal(5, 2)
+  operators         String?             @db.Text
+  url               String?             @db.Text
+  remarks           String?             @db.Text
+  created           DateTime            @default(now()) @db.DateTime(0)
+  createdby         BigInt              @default(0) @db.UnsignedBigInt
+  updated           DateTime?           @db.DateTime(0)
+  updatedby         BigInt?             @db.UnsignedBigInt
+  updatedfromreport Int?                @db.UnsignedInt
+  hash              String?             @db.VarChar(45)
+  source            String              @db.VarChar(45)
+  externalid        String?             @db.VarChar(45)
+  echolink          Int?                @db.UnsignedInt
+  deleted           Int                 @default(0) @db.UnsignedTinyInt
+  countries         countries           @relation(fields: [country], references: [shortcode], map: "FK_repeaters_country")
+  sources           sources             @relation(fields: [source], references: [sourcename], map: "FK_repeaters_source")
+  repeaters_history repeaters_history[]
+
+  @@index([country], map: "FK_repeaters_country")
+  @@index([createdby], map: "FK_repeaters_createdby")
+  @@index([source], map: "FK_repeaters_source")
+  @@index([updatedby], map: "FK_repeaters_updatedby")
+  @@index([band], map: "band")
+  @@index([deleted], map: "deleted")
+  @@index([latitude], map: "latitude")
+  @@index([longitude], map: "longitude")
+  @@index([mode], map: "mode")
+  @@index([qra], map: "qra")
+  @@index([qra, band], map: "qra_band")
+  @@index([qra, band, mode], map: "qra_band_mode")
+  @@index([updated], map: "updated")
+}
+
+model countries {
+  shortcode   String      @id @db.VarChar(2)
+  description String      @db.VarChar(45)
+  nativename  String      @db.VarChar(255)
+  prefixes    String      @db.VarChar(255)
+  enabled     Int         @default(0) @db.UnsignedTinyInt
+  latitude    Decimal     @db.Decimal(10, 6)
+  longitude   Decimal     @db.Decimal(10, 6)
+  zoom        Int         @db.UnsignedInt
+  httpcode    String      @default("") @db.VarChar(16)
+  repeaters   repeaters[]
+}
+
+model repeaters_history {
+  id                Int       @db.UnsignedInt
+  qra               String    @db.VarChar(16)
+  status            Int       @default(0) @db.UnsignedInt
+  licensevalid      DateTime? @db.Date
+  qrg_tx            Decimal   @default(0.000000) @db.Decimal(12, 6)
+  qrg_rx            Decimal   @default(0.000000) @db.Decimal(12, 6)
+  crossbandmode     Int       @default(0) @db.UnsignedInt
+  qrg_cross         Decimal?  @db.Decimal(12, 6)
+  band              Int       @default(0) @db.UnsignedInt
+  mode              Int       @default(0) @db.UnsignedInt
+  locator           String?   @db.VarChar(6)
+  qth               String?   @db.VarChar(255)
+  country           String    @default("") @db.VarChar(2)
+  latitude          Decimal?  @db.Decimal(10, 6)
+  longitude         Decimal?  @db.Decimal(10, 6)
+  altoversea        Int?      @db.UnsignedInt
+  altoverground     Int?      @db.UnsignedInt
+  activation        Int       @default(0) @db.UnsignedInt
+  ctcss_rx          Decimal?  @db.Decimal(4, 1)
+  ctcss_tx          Decimal?  @db.Decimal(4, 1)
+  dcs_rx            String?   @db.VarChar(6)
+  dcs_tx            String?   @db.VarChar(6)
+  dtmf_rx           String?   @db.VarChar(1)
+  power             Decimal?  @db.Decimal(5, 2)
+  operators         String?   @db.Text
+  url               String?   @db.Text
+  remarks           String?   @db.Text
+  created           DateTime  @db.DateTime(0)
+  createdby         Int       @default(0) @db.UnsignedInt
+  updated           DateTime? @db.DateTime(0)
+  updatedby         Int?      @db.UnsignedInt
+  updatedfromreport Int?      @db.UnsignedInt
+  hash              String?   @db.VarChar(45)
+  source            String    @db.VarChar(45)
+  externalid        String?   @db.VarChar(45)
+  echolink          Int?      @db.UnsignedInt
+  deleted           Int       @default(0) @db.UnsignedTinyInt
+  changeid          Int       @id @default(autoincrement()) @db.UnsignedInt
+  repeaters         repeaters @relation(fields: [id], references: [id], onDelete: Cascade, map: "repeaters_id")
+
+  @@index([band], map: "band")
+  @@index([id], map: "id")
+  @@index([qra], map: "qra")
+}
+
+model sources {
+  sourcename String      @id @db.VarChar(255)
+  shorturl   String      @db.VarChar(255)
+  url        String      @db.VarChar(255)
+  vhash      String?     @db.VarChar(255)
+  repeaters  repeaters[]
+}
+
+model masks {
+  type        String  @db.VarChar(45)
+  mask        Int
+  description String  @db.VarChar(45)
+  constname   String  @db.VarChar(45)
+  color       String? @db.VarChar(13)
+  enabled     Int     @default(0) @db.UnsignedTinyInt
+
+  @@id([type, mask])
+}
